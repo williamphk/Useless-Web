@@ -25,8 +25,16 @@ for (let i = 0; i < boardSizeY; i++) {
 
 // Game logic
 let snakeDirection = "right";
-let snakeLength = 3;
+let snakeLength = 10;
 let snakePosition = [
+  [10, 5],
+  [9, 5],
+  [8, 5],
+  [7, 5],
+  [6, 5],
+  [5, 5],
+  [4, 5],
+  [3, 5],
   [2, 5],
   [1, 5],
   [0, 5],
@@ -65,11 +73,12 @@ function updatePosition() {
   console.log(lastCell);
 
   const { index, operation } = directionMap[snakeDirection];
-
-  for (let i = 0; i < snakeLength; i++) {
-    snakePosition[i][index] = operation(snakePosition[i][index]);
-  }
-  console.log(snakePosition[0], snakePosition[1], snakePosition[2]);
+  // Copy the current head position
+  const newHead = [...snakePosition[0]];
+  newHead[index] = operation(newHead[index]); // Update the relevant coordinate
+  snakePosition.unshift(newHead); // Add the new head to the snake body
+  snakePosition.pop();
+  //console.log(snakePosition[0], snakePosition[1], snakePosition[2]);
 
   let forwardCell = document.getElementById(
     `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
@@ -82,31 +91,15 @@ document.addEventListener("keydown", function (event) {
   switch (event.key) {
     case "ArrowLeft":
       snakeDirection = "left";
-      for (let i = 1; i < snakeLength; i++) {
-        snakePosition[i][0] = snakePosition[0][0] + i;
-        snakePosition[i][1] = snakePosition[0][1];
-      }
       break;
     case "ArrowRight":
       snakeDirection = "right";
-      for (let i = 1; i < snakeLength; i++) {
-        snakePosition[i][0] = snakePosition[0][0] - i;
-        snakePosition[i][1] = snakePosition[0][1];
-      }
       break;
     case "ArrowUp":
       snakeDirection = "up";
-      for (let i = 1; i < snakeLength; i++) {
-        snakePosition[i][0] = snakePosition[0][0];
-        snakePosition[i][1] = snakePosition[0][1] + i;
-      }
       break;
     case "ArrowDown":
       snakeDirection = "down";
-      for (let i = 1; i < snakeLength; i++) {
-        snakePosition[i][0] = snakePosition[0][0];
-        snakePosition[i][1] = snakePosition[0][1] - i;
-      }
       break;
   }
 });
