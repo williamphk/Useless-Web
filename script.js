@@ -1,3 +1,4 @@
+// Dom element
 const gameBoard = document.getElementById("game-board");
 
 let screenWidth = window.innerWidth;
@@ -20,4 +21,19 @@ for (let i = 0; i < boardSizeY; i++) {
   }
 
   gameBoard.appendChild(row);
+}
+
+// Game logic
+let snakeDirection = "left";
+let snakeLength = 1;
+let snakePosition = [0, 0];
+
+// Move the snake into the direction 1 checkbox every second
+let moveSnake = setInterval(updatePosition, 1000);
+
+function updatePosition() {
+  switch (snakeDirection) {
+    case "left":
+      snakePosition[0]++;
+  }
 }
