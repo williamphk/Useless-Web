@@ -30,10 +30,10 @@ let snakePosition = [[0, 0]];
 
 // Mapping of directions to array indices and operations
 const directionMap = {
-  left: { index: 0, operation: (x) => x + 1 },
-  right: { index: 0, operation: (x) => x - 1 },
-  up: { index: 1, operation: (x) => x + 1 },
-  down: { index: 1, operation: (x) => x - 1 },
+  left: { index: 0, operation: (x) => x - 1 },
+  right: { index: 0, operation: (x) => x + 1 },
+  up: { index: 1, operation: (x) => x - 1 },
+  down: { index: 1, operation: (x) => x + 1 },
 };
 
 // Check the first cell
@@ -41,7 +41,7 @@ let firstCell = document.getElementById(`cell-${0}-${0}`);
 firstCell.checked = true;
 
 // Move the snake into the direction 1 checkbox every second
-let moveSnake = setInterval(updatePosition, 1000);
+let moveSnake = setInterval(updatePosition, 600);
 
 function updatePosition() {
   let lastCell = document.getElementById(
@@ -61,6 +61,22 @@ function updatePosition() {
     `cell-${snakePosition[0][1]}-${snakePosition[0][0]}`
   );
   forwardCell.checked = true;
-
-  console.log(lastCell);
 }
+
+// Event listener for arrow keys
+document.addEventListener("keydown", function (event) {
+  switch (event.key) {
+    case "ArrowLeft":
+      snakeDirection = "left";
+      break;
+    case "ArrowRight":
+      snakeDirection = "right";
+      break;
+    case "ArrowUp":
+      snakeDirection = "up";
+      break;
+    case "ArrowDown":
+      snakeDirection = "down";
+      break;
+  }
+});
