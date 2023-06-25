@@ -25,16 +25,8 @@ for (let i = 0; i < boardSizeY; i++) {
 
 // Game logic
 let snakeDirection = "right";
-let snakeLength = 10;
+let snakeLength = 3;
 let snakePosition = [
-  [10, 5],
-  [9, 5],
-  [8, 5],
-  [7, 5],
-  [6, 5],
-  [5, 5],
-  [4, 5],
-  [3, 5],
   [2, 5],
   [1, 5],
   [0, 5],
@@ -48,11 +40,12 @@ const directionMap = {
   down: { index: 1, operation: (x) => x + 1 },
 };
 
-// Check the first cell
-let firstCell = document.getElementById(
-  `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
-);
-firstCell.checked = true;
+// Check the snake in start position
+for (let i = 0; i < snakeLength; i++) {
+  document.getElementById(
+    `cell-${snakePosition[i][0]}-${snakePosition[i][1]}`
+  ).checked = true;
+}
 
 // Check a ramdom cell as food
 let ramdomX = Math.floor(Math.random() * (screenWidth / 30));
@@ -61,7 +54,7 @@ let ramdomCell = document.getElementById(`cell-${ramdomX}-${ramdomY}`);
 ramdomCell.checked = true;
 
 // Move the snake into the direction 1 checkbox every second
-let moveSnake = setInterval(updatePosition, 1000);
+let moveSnake = setInterval(updatePosition, 400);
 
 function updatePosition() {
   let lastCell = document.getElementById(
