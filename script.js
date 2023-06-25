@@ -36,15 +36,31 @@ const directionMap = {
   down: { index: 1, operation: (x) => x - 1 },
 };
 
+// Check the first cell
+let firstCell = document.getElementById(`cell-${0}-${0}`);
+firstCell.checked = true;
+
 // Move the snake into the direction 1 checkbox every second
 let moveSnake = setInterval(updatePosition, 1000);
 
 function updatePosition() {
+  let lastCell = document.getElementById(
+    `cell-${snakePosition[snakeLength - 1][1]}-${
+      snakePosition[snakeLength - 1][0]
+    }`
+  );
+  lastCell.checked = false;
+
   const { index, operation } = directionMap[snakeDirection];
 
   for (let i = 0; i < snakeLength; i++) {
     snakePosition[i][index] = operation(snakePosition[i][index]);
   }
 
-  console.log(snakePosition);
+  let forwardCell = document.getElementById(
+    `cell-${snakePosition[0][1]}-${snakePosition[0][0]}`
+  );
+  forwardCell.checked = true;
+
+  console.log(lastCell);
 }
