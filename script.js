@@ -26,14 +26,25 @@ for (let i = 0; i < boardSizeY; i++) {
 // Game logic
 let snakeDirection = "left";
 let snakeLength = 1;
-let snakePosition = [0, 0];
+let snakePosition = [[0, 0]];
+
+// Mapping of directions to array indices and operations
+const directionMap = {
+  left: { index: 0, operation: (x) => x + 1 },
+  right: { index: 0, operation: (x) => x - 1 },
+  up: { index: 1, operation: (x) => x + 1 },
+  down: { index: 1, operation: (x) => x - 1 },
+};
 
 // Move the snake into the direction 1 checkbox every second
 let moveSnake = setInterval(updatePosition, 1000);
 
 function updatePosition() {
-  switch (snakeDirection) {
-    case "left":
-      snakePosition[0]++;
+  const { index, operation } = directionMap[snakeDirection];
+
+  for (let i = 0; i < snakeLength; i++) {
+    snakePosition[i][index] = operation(snakePosition[i][index]);
   }
+
+  console.log(snakePosition);
 }
