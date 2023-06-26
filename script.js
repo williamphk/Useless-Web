@@ -25,8 +25,11 @@ for (let i = 0; i < boardSizeY; i++) {
 
 // Game logic
 let snakeDirection = "right";
-let snakeLength = 3;
+let snakeLength = 6;
 let snakePosition = [
+  [5, 5],
+  [4, 5],
+  [3, 5],
   [2, 5],
   [1, 5],
   [0, 5],
@@ -69,6 +72,15 @@ function updatePosition() {
   // Copy the current head position
   const newHead = [...snakePosition[0]];
   newHead[index] = operation(newHead[index]); // Update the relevant coordinate
+  if (
+    snakePosition.some((position) =>
+      position.every((value, index) => value === newHead[index])
+    )
+  ) {
+    clearInterval(moveSnake);
+    return;
+  }
+
   snakePosition.unshift(newHead); // Add the new head to the snake body
   snakePosition.pop();
   //console.log(snakePosition[0], snakePosition[1], snakePosition[2]);
