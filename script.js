@@ -34,6 +34,7 @@ let snakePosition = [
   [1, 5],
   [0, 5],
 ];
+let functionCount = 0;
 
 // Mapping of directions to array indices and operations
 const directionMap = {
@@ -50,11 +51,11 @@ for (let i = 0; i < snakeLength; i++) {
   ).checked = true;
 }
 
-// Check a ramdom cell as food
-let ramdomX = Math.floor(Math.random() * (screenWidth / 30));
-let ramdomY = Math.floor(Math.random() * (screenHeight / 30));
-let ramdomCell = document.getElementById(`cell-${ramdomX}-${ramdomY}`);
-ramdomCell.checked = true;
+// Check a random cell as food
+let randomX = Math.floor(Math.random() * (screenWidth / 30));
+let randomY = Math.floor(Math.random() * (screenHeight / 30));
+let randomCell = document.getElementById(`cell-${randomX}-${randomY}`);
+randomCell.checked = true;
 
 // Move the snake into the direction 1 checkbox every second
 let moveSnake = setInterval(updatePosition, 400);
@@ -69,10 +70,10 @@ function updatePosition() {
   //console.log(lastCell);
 
   // set random direction for snake
-  snakeDirection = getRandomDirection(snakeDirection);
+  //snakeDirection = getRandomDirection(snakeDirection);
 
   updateSnakeArray();
-
+  functionCount = 0;
   let forwardCell = document.getElementById(
     `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
   );
@@ -128,6 +129,12 @@ function getRandomDirection(currentDirection) {
 }
 
 function updateSnakeArray() {
+  functionCount++;
+
+  if (functionCount > 3) {
+    clearInterval(moveSnake);
+    return;
+  }
   const { index, operation } = directionMap[snakeDirection];
   // Copy the current head position
   const newHead = [...snakePosition[0]];
