@@ -66,29 +66,18 @@ function updatePosition() {
     }`
   );
   lastCell.checked = false;
-  console.log(lastCell);
+  //console.log(lastCell);
 
-  const { index, operation } = directionMap[snakeDirection];
-  // Copy the current head position
-  const newHead = [...snakePosition[0]];
-  newHead[index] = operation(newHead[index]); // Update the relevant coordinate
-  if (
-    snakePosition.some((position) =>
-      position.every((value, index) => value === newHead[index])
-    )
-  ) {
-    clearInterval(moveSnake);
-    return;
-  }
+  // set random direction for snake
+  snakeDirection = getRandomDirection(snakeDirection);
 
-  snakePosition.unshift(newHead); // Add the new head to the snake body
-  snakePosition.pop();
-  //console.log(snakePosition[0], snakePosition[1], snakePosition[2]);
+  updateSnakeArray();
 
   let forwardCell = document.getElementById(
     `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
   );
   forwardCell.checked = true;
+  console.log(forwardCell);
 }
 
 // Event listener for arrow keys
@@ -108,3 +97,59 @@ document.addEventListener("keydown", function (event) {
       break;
   }
 });
+
+// helper function
+function getRandomDirection(currentDirection) {
+  const opposite = {
+    up: "down",
+    down: "up",
+    left: "right",
+    right: "left",
+  };
+
+  let directions = [
+    "up",
+    "down",
+    "left",
+    "right",
+    currentDirection,
+    currentDirection,
+    currentDirection,
+  ];
+
+  // Remove the opposite direction
+  directions = directions.filter(
+    (direction) => direction !== opposite[currentDirection]
+  );
+
+  const randomIndex = Math.floor(Math.random() * directions.length);
+
+  return directions[randomIndex];
+}
+
+function updateSnakeArray() {
+  const { index, operation } = directionMap[snakeDirection];
+  // Copy the current head position
+  const newHead = [...snakePosition[0]];
+  newHead[index] = operation(newHead[index]); // Update the relevant coordinate
+
+  if (
+    newHead[0] < 0 ||
+    newHead[0] > screenWidth / 30 ||
+    newHead[1] < 0 ||
+    newHead[1] > screenHeight / 30
+  ) {
+    snakeDirection = getRandomDirection(snakeDirection);
+    updateSnakeArray();
+    return;
+  }
+  if (
+    document.getElementById(`cell-${newHead[0]}-${newHead[1]}`).checked === true
+  ) {
+    snakeDirection = getRandomDirection(snakeDirection);
+    updateSnakeArray();
+    return;
+  }
+  snakePosition.unshift(newHead); // Add the new head to the snake body
+  snakePosition.pop();
+}
