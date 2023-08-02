@@ -6,6 +6,7 @@ let screenHeight = window.innerHeight;
 const boardSizeX = screenWidth / 30;
 const boardSizeY = screenHeight / 30;
 
+// Create the game board
 for (let i = 0; i < boardSizeY; i++) {
   let row = document.createElement("div");
   row.className = "row";
@@ -34,7 +35,8 @@ let snakePosition = [
   [1, 5],
   [0, 5],
 ];
-let functionCount = 0;
+let gameEnd = false;
+let snakeAte = false;
 
 // Mapping of directions to array indices and operations
 const directionMap = {
@@ -51,112 +53,105 @@ for (let i = 0; i < snakeLength; i++) {
   ).checked = true;
 }
 
+checkRandomCellAsFood();
+
 // Check a random cell as food
-let randomX = Math.floor(Math.random() * (screenWidth / 30));
-let randomY = Math.floor(Math.random() * (screenHeight / 30));
-let randomCell = document.getElementById(`cell-${randomX}-${randomY}`);
-randomCell.checked = true;
+function checkRandomCellAsFood() {
+  let randomX = Math.floor(Math.random() * (screenWidth / 30));
+  let randomY = Math.floor(Math.random() * (screenHeight / 30));
+  let randomCell = document.getElementById(`cell-${randomX}-${randomY}`);
+  if (randomCell.checked === true) {
+    checkRandomCellAsFood();
+  }
+  randomCell.checked = true;
+  randomCell.setAttribute("data-food", true);
+}
 
 // Move the snake into the direction 1 checkbox every second
-let moveSnake = setInterval(updatePosition, 400);
+let moveSnake = setInterval(updatePosition, 100);
 
+// Update the snake visual position
 function updatePosition() {
   let lastCell = document.getElementById(
     `cell-${snakePosition[snakeLength - 1][0]}-${
       snakePosition[snakeLength - 1][1]
     }`
   );
-  lastCell.checked = false;
-  //console.log(lastCell);
-
-  // set random direction for snake
-  //snakeDirection = getRandomDirection(snakeDirection);
 
   updateSnakeArray();
-  functionCount = 0;
+
+  if (gameEnd || snakeAte) {
+  } else {
+    // Uncheck the last cell
+    lastCell.checked = false;
+  }
+  snakeAte = false;
+  //console.log(lastCell);
+
+  // Check the new head
   let forwardCell = document.getElementById(
     `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
   );
   forwardCell.checked = true;
-  console.log(forwardCell);
+  //console.log(forwardCell);
 }
 
 // Event listener for arrow keys
 document.addEventListener("keydown", function (event) {
   switch (event.key) {
     case "ArrowLeft":
-      snakeDirection = "left";
+      if (snakeDirection !== "right") snakeDirection = "left";
       break;
     case "ArrowRight":
-      snakeDirection = "right";
+      if (snakeDirection !== "left") snakeDirection = "right";
       break;
     case "ArrowUp":
-      snakeDirection = "up";
+      if (snakeDirection !== "down") snakeDirection = "up";
       break;
     case "ArrowDown":
-      snakeDirection = "down";
+      if (snakeDirection !== "up") snakeDirection = "down";
       break;
   }
 });
 
-// helper function
-function getRandomDirection(currentDirection) {
-  const opposite = {
-    up: "down",
-    down: "up",
-    left: "right",
-    right: "left",
-  };
-
-  let directions = [
-    "up",
-    "down",
-    "left",
-    "right",
-    currentDirection,
-    currentDirection,
-    currentDirection,
-  ];
-
-  // Remove the opposite direction
-  directions = directions.filter(
-    (direction) => direction !== opposite[currentDirection]
-  );
-
-  const randomIndex = Math.floor(Math.random() * directions.length);
-
-  return directions[randomIndex];
-}
-
 function updateSnakeArray() {
-  functionCount++;
-
-  if (functionCount > 3) {
-    clearInterval(moveSnake);
-    return;
-  }
   const { index, operation } = directionMap[snakeDirection];
   // Copy the current head position
   const newHead = [...snakePosition[0]];
   newHead[index] = operation(newHead[index]); // Update the relevant coordinate
 
+  // Check if the snake is out of bounds
   if (
     newHead[0] < 0 ||
     newHead[0] > screenWidth / 30 ||
     newHead[1] < 0 ||
     newHead[1] > screenHeight / 30
   ) {
-    snakeDirection = getRandomDirection(snakeDirection);
-    updateSnakeArray();
-    return;
+    console.log("Game over");
+    clearInterval(moveSnake);
+    gameEnd = true;
   }
+
+  // Check if the snake ate the food
+  let snakeHead = document.getElementById(`cell-${newHead[0]}-${newHead[1]}`);
   if (
-    document.getElementById(`cell-${newHead[0]}-${newHead[1]}`).checked === true
+    snakeHead.checked === true &&
+    snakeHead.getAttribute("data-food") === "true"
   ) {
-    snakeDirection = getRandomDirection(snakeDirection);
-    updateSnakeArray();
+    console.log("Snake ate");
+    snakePosition.unshift(newHead); // Add the new head to the snake body
+    snakeLength++;
+    snakeAte = true;
+    snakeHead.removeAttribute("data-food");
+    checkRandomCellAsFood();
     return;
   }
+  // if (snakeHead.checked === true) {
+  //   console.log("Game over");
+  //   clearInterval(moveSnake);
+  //   gameEnd = true;
+  //   return;
+  // }
   snakePosition.unshift(newHead); // Add the new head to the snake body
   snakePosition.pop();
 }
