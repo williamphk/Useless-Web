@@ -132,9 +132,7 @@ startBtn.addEventListener("click", function () {
       newHead[1] < 0 ||
       newHead[1] > screenHeight / 30
     ) {
-      console.log("Game over");
-      clearInterval(moveSnake);
-      gameEnd = true;
+      gameOver(moveSnake);
     }
 
     // Check if the snake ate the food
@@ -153,12 +151,136 @@ startBtn.addEventListener("click", function () {
       return;
     }
     if (snakeHead && snakeHead.checked === true) {
-      console.log("Game over");
-      clearInterval(moveSnake);
-      gameEnd = true;
+      gameOver(moveSnake);
       return;
     }
     snakePosition.unshift(newHead); // Add the new head to the snake body
     snakePosition.pop();
   }
 });
+
+function gameOver(moveSnake) {
+  console.log("Game over");
+  clearInterval(moveSnake);
+  gameEnd = true;
+  setTimeout(() => uncheckAll(), 500);
+  setTimeout(() => printGameOverWithCheckbox(), 600);
+}
+
+function uncheckAll() {
+  for (let i = 0; i < boardSizeY; i++) {
+    for (let j = 0; j < boardSizeX; j++) {
+      document.getElementById(`cell-${j}-${i}`).checked = false;
+    }
+  }
+}
+
+function printGameOverWithCheckbox() {
+  // G
+  for (let j = 4; j < 9; j++) {
+    document.getElementById(`cell-${j}-${6}`).checked = true;
+  }
+  for (let i = 7; i < 13; i++) {
+    document.getElementById(`cell-${4}-${i}`).checked = true;
+  }
+  for (let j = 5; j < 9; j++) {
+    document.getElementById(`cell-${j}-${12}`).checked = true;
+  }
+  for (let i = 9; i < 12; i++) {
+    document.getElementById(`cell-${8}-${i}`).checked = true;
+  }
+  document.getElementById(`cell-${7}-${9}`).checked = true;
+  // A
+  document.getElementById(`cell-${13}-${6}`).checked = true;
+  document.getElementById(`cell-${12}-${7}`).checked = true;
+  document.getElementById(`cell-${14}-${7}`).checked = true;
+  for (let i = 8; i < 13; i++) {
+    document.getElementById(`cell-${11}-${i}`).checked = true;
+  }
+  for (let i = 8; i < 13; i++) {
+    document.getElementById(`cell-${15}-${i}`).checked = true;
+  }
+  for (let j = 12; j < 15; j++) {
+    document.getElementById(`cell-${j}-${10}`).checked = true;
+  }
+  // M
+  document.getElementById(`cell-${19}-${7}`).checked = true;
+  document.getElementById(`cell-${21}-${7}`).checked = true;
+  document.getElementById(`cell-${20}-${8}`).checked = true;
+  for (let i = 6; i < 13; i++) {
+    document.getElementById(`cell-${18}-${i}`).checked = true;
+  }
+  for (let i = 6; i < 13; i++) {
+    document.getElementById(`cell-${22}-${i}`).checked = true;
+  }
+  // E
+  for (let j = 26; j < 30; j++) {
+    document.getElementById(`cell-${j}-${6}`).checked = true;
+  }
+  for (let j = 26; j < 30; j++) {
+    document.getElementById(`cell-${j}-${9}`).checked = true;
+  }
+  for (let j = 26; j < 30; j++) {
+    document.getElementById(`cell-${j}-${12}`).checked = true;
+  }
+  for (let i = 6; i < 13; i++) {
+    document.getElementById(`cell-${25}-${i}`).checked = true;
+  }
+
+  // O
+  for (let j = 11; j < 16; j++) {
+    document.getElementById(`cell-${j}-${15}`).checked = true;
+  }
+  for (let i = 16; i < 21; i++) {
+    document.getElementById(`cell-${11}-${i}`).checked = true;
+  }
+  for (let j = 11; j < 16; j++) {
+    document.getElementById(`cell-${j}-${21}`).checked = true;
+  }
+  for (let i = 16; i < 21; i++) {
+    document.getElementById(`cell-${15}-${i}`).checked = true;
+  }
+  // V
+  document.getElementById(`cell-${19}-${19}`).checked = true;
+  document.getElementById(`cell-${19}-${20}`).checked = true;
+  document.getElementById(`cell-${21}-${19}`).checked = true;
+  document.getElementById(`cell-${21}-${20}`).checked = true;
+  document.getElementById(`cell-${20}-${21}`).checked = true;
+  for (let i = 15; i < 19; i++) {
+    document.getElementById(`cell-${18}-${i}`).checked = true;
+  }
+  for (let i = 15; i < 19; i++) {
+    document.getElementById(`cell-${22}-${i}`).checked = true;
+  }
+  // R
+  document.getElementById(`cell-${26}-${19}`).checked = true;
+  document.getElementById(`cell-${27}-${20}`).checked = true;
+  document.getElementById(`cell-${28}-${20}`).checked = true;
+  document.getElementById(`cell-${29}-${21}`).checked = true;
+  for (let i = 15; i < 22; i++) {
+    document.getElementById(`cell-${25}-${i}`).checked = true;
+  }
+  for (let j = 26; j < 29; j++) {
+    document.getElementById(`cell-${j}-${15}`).checked = true;
+  }
+  for (let j = 26; j < 29; j++) {
+    document.getElementById(`cell-${j}-${18}`).checked = true;
+  }
+  for (let i = 16; i < 18; i++) {
+    document.getElementById(`cell-${29}-${i}`).checked = true;
+  }
+
+  // E
+  for (let j = 33; j < 37; j++) {
+    document.getElementById(`cell-${j}-${15}`).checked = true;
+  }
+  for (let j = 33; j < 37; j++) {
+    document.getElementById(`cell-${j}-${18}`).checked = true;
+  }
+  for (let j = 33; j < 37; j++) {
+    document.getElementById(`cell-${j}-${21}`).checked = true;
+  }
+  for (let i = 15; i < 22; i++) {
+    document.getElementById(`cell-${32}-${i}`).checked = true;
+  }
+}
