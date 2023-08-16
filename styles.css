@@ -11,6 +11,11 @@ body {
   align-items: center;
 }
 
+p {
+  font-size: 20px;
+  margin: 0;
+}
+
 .row {
   display: flex;
 }

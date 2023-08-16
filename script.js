@@ -1,5 +1,7 @@
 // Dom element
 const gameBoard = document.getElementById("game-board");
+const score1 = document.getElementById("score1");
+const score2 = document.getElementById("score2");
 
 let screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
@@ -38,6 +40,8 @@ let snakePosition = [
 let gameEnd = false;
 let snakeAte = false;
 let speed = 70;
+let numOfCellVisited = 0;
+let score = 0;
 
 // Mapping of directions to array indices and operations
 const directionMap = {
@@ -88,6 +92,14 @@ startBtn.addEventListener("click", function (e) {
       }`
     );
 
+    let forwardCell = document.getElementById(
+      `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
+    );
+
+    if (forwardCell.style.boxShadow === "") {
+      score2.innerHTML = `Number of cell visited: ${numOfCellVisited++}`;
+    }
+
     updateSnakeArray();
 
     if (gameEnd || snakeAte) {
@@ -99,13 +111,22 @@ startBtn.addEventListener("click", function (e) {
     //console.log(lastCell);
 
     // Check the new head
-    let forwardCell = document.getElementById(
-      `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
-    );
+
     if (forwardCell) {
       forwardCell.checked = true;
+      forwardCell.style.accentColor = getRandomColor();
+      forwardCell.style.boxShadow = `0 0 10px ${getRandomColor()}`;
     }
     //console.log(forwardCell);
+  }
+
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   // Event listener for arrow keys
@@ -155,13 +176,16 @@ startBtn.addEventListener("click", function (e) {
         clearInterval(moveSnake);
         moveSnake = setInterval(updatePosition, speed);
       }
+
+      score1.innerHTML = `Number of food ate: ${snakeLength - 5}`;
+
       snakePosition.unshift(newHead); // Add the new head to the snake body
       snakeLength++;
       snakeAte = true;
       snakeHead.removeAttribute("data-food");
       checkRandomCellAsFood();
-      snakeHead.style.accentColor = "#00ff1e";
-      snakeHead.style.boxShadow = "0 0 10px rgb(255, 255, 255)";
+      snakeHead.style.accentColor = "red";
+      snakeHead.style.boxShadow = "0 0 10px red";
       return;
     }
     if (snakeHead && snakeHead.checked === true) {
@@ -187,7 +211,6 @@ function uncheckAll() {
   for (let i = 0; i < boardSizeY; i++) {
     for (let j = 0; j < boardSizeX; j++) {
       document.getElementById(`cell-${j}-${i}`).checked = false;
-      document.getElementById(`cell-${j}-${i}`).style.boxShadow = "none";
     }
   }
 }
