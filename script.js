@@ -37,6 +37,7 @@ let snakePosition = [
 ];
 let gameEnd = false;
 let snakeAte = false;
+let speed = 70;
 
 // Mapping of directions to array indices and operations
 const directionMap = {
@@ -71,7 +72,7 @@ function checkRandomCellAsFood() {
 const startBtn = document.getElementById("start");
 startBtn.addEventListener("click", function () {
   // Move the snake into the direction 1 checkbox every second
-  let moveSnake = setInterval(updatePosition, 70);
+  let moveSnake = setInterval(updatePosition, speed);
 
   // Update the snake visual position
   function updatePosition() {
