@@ -2,6 +2,7 @@
 
 body {
   font-family: "Bubblegum Sans", cursive;
+  background-color: rgb(199, 199, 199);
 }
 
 #game-board {
@@ -18,10 +19,25 @@ body {
   width: 20px;
   height: 20px;
   margin: 1px;
+  cursor: pointer;
+}
+
+.cell:not(:checked) {
+  box-shadow: 0 0 10px rgb(255, 255, 255);
+}
+
+.cell:checked {
+  box-shadow: 0 0 10px 2px rgb(0, 255, 30);
+  accent-color: #00ff1e;
 }
 
 .start-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+}
+
+#start {
+  font-family: "Bubblegum Sans", cursive;
+  font-size: 20px;
 }

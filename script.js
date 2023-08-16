@@ -65,12 +65,18 @@ function checkRandomCellAsFood() {
     checkRandomCellAsFood();
   }
   randomCell.checked = true;
+  randomCell.style.accentColor = "red";
+  randomCell.style.boxShadow = "0 0 10px 2px red";
   randomCell.setAttribute("data-food", true);
 }
 
 // Start the game
 const startBtn = document.getElementById("start");
-startBtn.addEventListener("click", function () {
+startBtn.addEventListener("click", function (e) {
+  if (startBtn.value === "Restart") {
+    location.reload();
+  }
+  e.target.disabled = true;
   // Move the snake into the direction 1 checkbox every second
   let moveSnake = setInterval(updatePosition, speed);
 
@@ -144,11 +150,18 @@ startBtn.addEventListener("click", function () {
       snakeHead.getAttribute("data-food") === "true"
     ) {
       console.log("Snake ate");
+      if (snakeLength % 5 === 0) {
+        speed -= 5;
+        clearInterval(moveSnake);
+        moveSnake = setInterval(updatePosition, speed);
+      }
       snakePosition.unshift(newHead); // Add the new head to the snake body
       snakeLength++;
       snakeAte = true;
       snakeHead.removeAttribute("data-food");
       checkRandomCellAsFood();
+      snakeHead.style.accentColor = "#00ff1e";
+      snakeHead.style.boxShadow = "0 0 10px rgb(255, 255, 255)";
       return;
     }
     if (snakeHead && snakeHead.checked === true) {
@@ -166,12 +179,15 @@ function gameOver(moveSnake) {
   gameEnd = true;
   setTimeout(() => uncheckAll(), 500);
   setTimeout(() => printGameOverWithCheckbox(), 600);
+  startBtn.disabled = false;
+  startBtn.value = "Restart";
 }
 
 function uncheckAll() {
   for (let i = 0; i < boardSizeY; i++) {
     for (let j = 0; j < boardSizeX; j++) {
       document.getElementById(`cell-${j}-${i}`).checked = false;
+      document.getElementById(`cell-${j}-${i}`).style.boxShadow = "none";
     }
   }
 }
