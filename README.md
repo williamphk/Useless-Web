@@ -37,3 +37,6 @@ The `gameOver` function is called to handle game over scenarios.
 
 The `uncheckAll` function unchecks all cells, clearing the board.
 The `printGameOverWithCheckbox` function prints "GAME OVER" on the game board using checked checkboxes.
+
+## Dependencies
+No external libraries or dependencies are required for this code. It runs purely on vanilla JavaScript.
