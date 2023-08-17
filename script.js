@@ -96,7 +96,7 @@ startBtn.addEventListener("click", function (e) {
       `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
     );
 
-    if (forwardCell.style.boxShadow === "") {
+    if (forwardCell && forwardCell.style.boxShadow === "") {
       score2.innerHTML = `Number of cell visited: ${numOfCellVisited++}`;
     }
 
