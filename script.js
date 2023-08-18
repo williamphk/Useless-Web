@@ -1,4 +1,4 @@
-// Import the functions you need from the SDKs you need
+// Import the functions from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
 import {
   getFirestore,
@@ -10,7 +10,7 @@ import {
   limit,
 } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB4zhzWU4dwovbYPyrWuct9s8qFQcP27AM",
   authDomain: "checkbox-snake-9cb23.firebaseapp.com",
@@ -70,7 +70,6 @@ let gameEnd = false;
 let snakeAte = false;
 let speed = 70;
 let numOfCellVisited = 0;
-let score = 0;
 
 // Mapping of directions to array indices and operations
 const directionMap = {
@@ -115,12 +114,14 @@ startBtn.addEventListener("click", function (e) {
 
   // Update the snake visual position
   function updatePosition() {
+    // Get the last cell
     let lastCell = document.getElementById(
       `cell-${snakePosition[snakeLength - 1][0]}-${
         snakePosition[snakeLength - 1][1]
       }`
     );
 
+    // Check the new head
     let forwardCell = document.getElementById(
       `cell-${snakePosition[0][0]}-${snakePosition[0][1]}`
     );
@@ -131,8 +132,7 @@ startBtn.addEventListener("click", function (e) {
 
     updateSnakeArray();
 
-    if (gameEnd || snakeAte) {
-    } else {
+    if (!gameEnd && !snakeAte) {
       // Uncheck the last cell
       lastCell.checked = false;
     }
@@ -140,7 +140,6 @@ startBtn.addEventListener("click", function (e) {
     //console.log(lastCell);
 
     // Check the new head
-
     if (forwardCell) {
       forwardCell.checked = true;
       forwardCell.style.accentColor = getRandomColor();
