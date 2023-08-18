@@ -114,7 +114,7 @@ startBtn.addEventListener("click", function (e) {
 
   // Update the snake visual position
   function updatePosition() {
-    // Get the last cell
+    // Get the last cell before the snake positon array is udpated
     let lastCell = document.getElementById(
       `cell-${snakePosition[snakeLength - 1][0]}-${
         snakePosition[snakeLength - 1][1]
@@ -130,14 +130,14 @@ startBtn.addEventListener("click", function (e) {
       score2.innerHTML = `Number of cell visited: ${numOfCellVisited++}`;
     }
 
+    // Update the snake position array
     updateSnakeArray();
 
+    // Uncheck the last cell
     if (!gameEnd && !snakeAte) {
-      // Uncheck the last cell
       lastCell.checked = false;
     }
     snakeAte = false;
-    //console.log(lastCell);
 
     // Check the new head
     if (forwardCell) {
@@ -145,16 +145,6 @@ startBtn.addEventListener("click", function (e) {
       forwardCell.style.accentColor = getRandomColor();
       forwardCell.style.boxShadow = `0 0 10px ${getRandomColor()}`;
     }
-    //console.log(forwardCell);
-  }
-
-  function getRandomColor() {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
   }
 
   // Event listener for arrow keys
@@ -244,6 +234,8 @@ function uncheckAll() {
   }
 }
 
+// Helper functions
+// Print Game Over with checkbox
 function printGameOverWithCheckbox() {
   // G
   for (let j = 4; j < 9; j++) {
@@ -354,6 +346,17 @@ function printGameOverWithCheckbox() {
   }
 }
 
+// Get random color
+function getRandomColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+// Store score to firebase
 async function storeScore(score1, score2) {
   try {
     const scores = collection(db, "scores");
@@ -368,6 +371,7 @@ async function storeScore(score1, score2) {
   }
 }
 
+// Get top 5 scores from firebase
 async function getTopFiveScores() {
   const scores = collection(db, "scores");
   const q = query(scores, orderBy("score1", "desc"), limit(5));
