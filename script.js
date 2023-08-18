@@ -1,7 +1,35 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+} from "https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB4zhzWU4dwovbYPyrWuct9s8qFQcP27AM",
+  authDomain: "checkbox-snake-9cb23.firebaseapp.com",
+  projectId: "checkbox-snake-9cb23",
+  storageBucket: "checkbox-snake-9cb23.appspot.com",
+  messagingSenderId: "798229108705",
+  appId: "1:798229108705:web:cb3aaa1687ed797ef624a0",
+  measurementId: "G-42PQQYM2X3",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // Dom element
 const gameBoard = document.getElementById("game-board");
 const score1 = document.getElementById("score1");
 const score2 = document.getElementById("score2");
+const topFive = document.getElementById("top-five");
 
 let screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
@@ -25,6 +53,7 @@ for (let i = 0; i < boardSizeY; i++) {
 
   gameBoard.appendChild(row);
 }
+getTopFiveScores();
 
 // Game logic
 let snakeDirection = "right";
@@ -204,6 +233,7 @@ function gameOver(moveSnake) {
   setTimeout(() => uncheckAll(), 500);
   setTimeout(() => printGameOverWithCheckbox(), 600);
   startBtn.disabled = false;
+  storeScore(snakeLength - 6, numOfCellVisited - 1);
   startBtn.value = "Restart";
 }
 
@@ -323,4 +353,33 @@ function printGameOverWithCheckbox() {
   for (let i = 15; i < 22; i++) {
     document.getElementById(`cell-${32}-${i}`).checked = true;
   }
+}
+
+async function storeScore(score1, score2) {
+  try {
+    const scores = collection(db, "scores");
+    const docRef = await addDoc(scores, {
+      score1: score1,
+      score2: score2,
+    });
+    console.log("Document written with ID: ", docRef.id);
+    getTopFiveScores();
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
+async function getTopFiveScores() {
+  const scores = collection(db, "scores");
+  const q = query(scores, orderBy("score1", "desc"), limit(5));
+  const querySnapshot = await getDocs(q);
+  const ul = document.createElement("ul");
+  topFive.innerHTML = "<p>Top 5 Scores:</p>";
+  querySnapshot.forEach((doc) => {
+    const li = document.createElement("li");
+    li.textContent = `Food: ${doc.data().score1}
+     Color: ${doc.data().score2}`;
+    ul.append(li);
+  });
+  topFive.append(ul);
 }
