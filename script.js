@@ -114,7 +114,7 @@ startBtn.addEventListener("click", function (e) {
 
   // Update the snake visual position
   function updatePosition() {
-    // Get the last cell before the snake positon array is udpated
+    // Get the last cell before the snake positon array is updated
     let lastCell = document.getElementById(
       `cell-${snakePosition[snakeLength - 1][0]}-${
         snakePosition[snakeLength - 1][1]
@@ -169,7 +169,8 @@ startBtn.addEventListener("click", function (e) {
     const { index, operation } = directionMap[snakeDirection];
     // Copy the current head position
     const newHead = [...snakePosition[0]];
-    newHead[index] = operation(newHead[index]); // Update the relevant coordinate
+    // Update the relevant coordinate
+    newHead[index] = operation(newHead[index]);
 
     // Check if the snake is out of bounds
     if (
@@ -188,16 +189,20 @@ startBtn.addEventListener("click", function (e) {
       snakeHead.checked === true &&
       snakeHead.getAttribute("data-food") === "true"
     ) {
-      console.log("Snake ate");
+      //console.log("Snake ate");
+
+      // Increase the speed every 5 food ate
       if (snakeLength % 5 === 0) {
         speed -= 5;
         clearInterval(moveSnake);
         moveSnake = setInterval(updatePosition, speed);
       }
 
+      // Update the score
       score1.innerHTML = `Number of food ate: ${snakeLength - 5}`;
 
-      snakePosition.unshift(newHead); // Add the new head to the snake body
+      // Add the new head to the snake body
+      snakePosition.unshift(newHead);
       snakeLength++;
       snakeAte = true;
       snakeHead.removeAttribute("data-food");
@@ -206,15 +211,21 @@ startBtn.addEventListener("click", function (e) {
       snakeHead.style.boxShadow = "0 0 10px red";
       return;
     }
+
+    // Check if the snake ate itself
     if (snakeHead && snakeHead.checked === true) {
       gameOver(moveSnake);
       return;
     }
-    snakePosition.unshift(newHead); // Add the new head to the snake body
+
+    // Add the new head to the snake body
+    snakePosition.unshift(newHead);
+    // Remove the last cell of the snake body
     snakePosition.pop();
   }
 });
 
+// Game over
 function gameOver(moveSnake) {
   console.log("Game over");
   clearInterval(moveSnake);
@@ -226,6 +237,7 @@ function gameOver(moveSnake) {
   startBtn.value = "Restart";
 }
 
+// Uncheck all the cells
 function uncheckAll() {
   for (let i = 0; i < boardSizeY; i++) {
     for (let j = 0; j < boardSizeX; j++) {
